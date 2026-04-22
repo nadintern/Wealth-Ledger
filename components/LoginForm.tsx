@@ -1,6 +1,6 @@
 "use client";
 
-import {FormEvent, useState} from "react";
+import {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import type {AppDispatch, RootState} from "@/redux_store";
 import {
@@ -22,7 +22,7 @@ export default function LoginForm() {
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
 
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         dispatch(loginUser({userName, password}));
     };
