@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {error} from "next/dist/build/output/log";
-import {loginUser} from "@/redux_store/thunks/authThunk";
+import {loginUser} from "@/features/auth/thunks/authThunk";
 
 interface IAuthState {
     username: string | null;

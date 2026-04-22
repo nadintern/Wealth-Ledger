@@ -1,8 +1,8 @@
 import {configureStore} from "@reduxjs/toolkit";
-import authReducer from "@/redux_store/slices/authSlice";
+import authReducer from "@/features/auth/slices/authSlice";
 
 /**
- * The purpose of configureStore is to create a redux_store from which we can fetch the state from
+ * The purpose of configureStore is to create a features from which we can fetch the state from
  *
  */
 export const store = configureStore({

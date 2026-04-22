@@ -2,15 +2,15 @@
 
 import {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import type {AppDispatch, RootState} from "@/redux_store";
+import type {AppDispatch, RootState} from "@/features";
 import {
     selectIsAuthenticated,
     selectLoading,
     selectLoginError,
     selectUsername,
-} from "@/redux_store/selectors/authSelectors";
-import {loginUser} from "@/redux_store/thunks/authThunk";
-import {logout} from "@/redux_store/slices/authSlice";
+} from "@/features/auth/selectors/authSelectors";
+import {loginUser} from "@/features/auth/thunks/authThunk";
+import {logout} from "@/features/auth/slices/authSlice";
 
 export default function LoginForm() {
     const dispatch = useDispatch<AppDispatch>();
