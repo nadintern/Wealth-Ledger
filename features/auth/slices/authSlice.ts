@@ -1,5 +1,4 @@
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {error} from "next/dist/build/output/log";
+import {createSlice} from "@reduxjs/toolkit";
 import {loginUser} from "@/features/auth/thunks/authThunk";
 
 interface IAuthState {
