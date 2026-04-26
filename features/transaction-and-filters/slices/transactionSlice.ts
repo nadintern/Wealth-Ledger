@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {simulateTxnFetch} from "@/features/transaction/thunks/transactionThunk";
+import {simulateTxnFetch} from "@/features/transaction-and-filters/thunks/transactionThunk";
 
 export type Transaction = {
     id: number;

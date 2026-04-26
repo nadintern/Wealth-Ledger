@@ -1,5 +1,5 @@
 import {RootState} from "@/features";
-import {Transaction} from "@/features/transaction/slices/transactionSlice";
+import {Transaction} from "@/features/transaction-and-filters/slices/transactionSlice";
 import {createSelector} from "@reduxjs/toolkit";
 
 // Base selectors — read raw state directly
