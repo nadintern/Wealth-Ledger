@@ -3,16 +3,19 @@
 import {useSelector} from "react-redux";
 import type {RootState} from "@/features";
 import {
-    selectTransactions,
     selectTransactionsLoading,
     selectTransactionsError,
     selectTotalBalance,
-} from "@/features/transaction/selectors/transactionSelectors";
+} from "@/features/transaction-and-filters/selectors/transactionSelectors";
+import {selectFilteredTransaction} from "@/features/transaction-and-filters/selectors/filterSelectors";
 import {selectUsername} from "@/features/auth/selectors/authSelectors";
+import FilterBar from "@/components/FilterBar";
+import CryptoPortfolio from "@/components/CryptoPortfolio";
+import NotificationsPanel from "@/components/NotificationsPanel";
 
 export default function HomePage() {
     const username = useSelector((state: RootState) => selectUsername(state));
-    const transactions = useSelector((state: RootState) => selectTransactions(state));
+    const transactions = useSelector((state: RootState) => selectFilteredTransaction(state));
     const loading = useSelector((state: RootState) => selectTransactionsLoading(state));
     const error = useSelector((state: RootState) => selectTransactionsError(state));
     const totalBalance = useSelector((state: RootState) => selectTotalBalance(state));
@@ -40,6 +43,12 @@ export default function HomePage() {
                     </span>
                 </div>
             </div>
+
+            <NotificationsPanel />
+
+            <CryptoPortfolio />
+
+            <FilterBar />
 
             <section className="flex flex-col gap-2">
                 <h2 className="text-xs uppercase tracking-widest text-muted mb-2">Transactions</h2>
