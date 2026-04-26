@@ -1,4 +1,4 @@
-import {RootState} from "@/redux_store";
+import {RootState} from "@/features";
 
 export const selectUsername = (state: RootState) => state.auth.username;
 export const selectLoading = (state: RootState) => state.auth.loading;
