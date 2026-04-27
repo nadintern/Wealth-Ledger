@@ -1,14 +1,18 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0a0a0a;
-  --foreground: #f0f0f0;
-  --surface: #141414;
-  --surface-raised: #1c1c1c;
-  --border: #2a2a2a;
-  --muted: #666666;
-  --accent-green: #4ade80;
+  --background: #08090b;
+  --foreground: #ededed;
+  --surface: #101114;
+  --surface-raised: #16181c;
+  --surface-hover: #1c1f24;
+  --border: #23262d;
+  --border-strong: #2e323a;
+  --muted: #7a7f8a;
+  --muted-strong: #a1a6b0;
+  --accent-green: #34d399;
   --accent-red: #f87171;
+  --accent-blue: #60a5fa;
 }
 
 @theme inline {
@@ -16,22 +20,58 @@
   --color-foreground: var(--foreground);
   --color-surface: var(--surface);
   --color-surface-raised: var(--surface-raised);
+  --color-surface-hover: var(--surface-hover);
   --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
   --color-muted: var(--muted);
+  --color-muted-strong: var(--muted-strong);
   --color-accent-green: var(--accent-green);
   --color-accent-red: var(--accent-red);
+  --color-accent-blue: var(--accent-blue);
   --font-sans: var(--font-inter);
   --font-mono: var(--font-geist-mono);
 }
 
-body {
+html, body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-inter), system-ui, sans-serif;
+  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
-/* Monospace for all numbers — gives that fintech dashboard feel */
+body {
+  background-image:
+    radial-gradient(1000px 600px at 80% -10%, rgba(96, 165, 250, 0.06), transparent 60%),
+    radial-gradient(800px 500px at -10% 110%, rgba(52, 211, 153, 0.05), transparent 60%);
+  background-attachment: fixed;
+}
+
 .font-numeric {
   font-family: var(--font-geist-mono), monospace;
   font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
 }
+
+/* Unified focus ring — subtle, professional */
+*:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 1px var(--background), 0 0 0 3px var(--border-strong);
+  border-radius: 8px;
+}
+
+/* Replace native select chevron with a clean SVG */
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237a7f8a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  padding-right: 2rem;
+}
+
+/* Custom scrollbar — subtle */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }
+::-webkit-scrollbar-track { background: transparent; }

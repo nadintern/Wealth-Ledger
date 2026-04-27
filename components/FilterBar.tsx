@@ -15,6 +15,9 @@ import {
 } from "@/features/transaction-and-filters/selectors/filterSelectors";
 import {Transaction} from "@/features/transaction-and-filters/slices/transactionSlice";
 
+const SELECT_CLASS =
+    "px-3 py-1.5 rounded-md bg-surface-raised border border-border text-xs text-foreground hover:border-border-strong focus:border-border-strong transition-colors cursor-pointer";
+
 export default function FilterBar() {
     const dispatch = useDispatch<AppDispatch>();
 
@@ -22,17 +25,19 @@ export default function FilterBar() {
     const category = useSelector((state: RootState) => selectCategoryFilter(state));
     const currency = useSelector((state: RootState) => selectCurrencyFilter(state));
 
+    const hasFilter = type !== null || category !== null || currency !== null;
+
     return (
-        <div className="flex gap-3 flex-wrap items-center">
+        <div className="flex gap-2 flex-wrap items-center">
             <select
                 value={type ?? ""}
                 onChange={(e) => {
                     const v = e.target.value;
                     dispatch(setTypeFilter(v === "" ? null : (v as Transaction["type"])));
                 }}
-                className="px-3 py-2 rounded-md bg-surface border border-border text-sm"
+                className={SELECT_CLASS}
             >
-                <option value="">All Types</option>
+                <option value="">All types</option>
                 <option value="credit">Credit</option>
                 <option value="debit">Debit</option>
             </select>
@@ -43,9 +48,9 @@ export default function FilterBar() {
                     const v = e.target.value;
                     dispatch(setCategory(v === "" ? null : (v as Transaction["category"])));
                 }}
-                className="px-3 py-2 rounded-md bg-surface border border-border text-sm"
+                className={SELECT_CLASS}
             >
-                <option value="">All Categories</option>
+                <option value="">All categories</option>
                 <option value="food">Food</option>
                 <option value="transport">Transport</option>
                 <option value="shopping">Shopping</option>
@@ -60,20 +65,22 @@ export default function FilterBar() {
                     const v = e.target.value;
                     dispatch(setCurrency(v === "" ? null : (v as Transaction["currency"])));
                 }}
-                className="px-3 py-2 rounded-md bg-surface border border-border text-sm"
+                className={SELECT_CLASS}
             >
-                <option value="">All Currencies</option>
+                <option value="">All currencies</option>
                 <option value="INR">INR</option>
                 <option value="USD">USD</option>
                 <option value="EUR">EUR</option>
             </select>
 
-            <button
-                onClick={() => dispatch(clearFilters())}
-                className="px-3 py-2 rounded-md bg-surface border border-border text-sm hover:bg-border"
-            >
-                Clear
-            </button>
+            {hasFilter && (
+                <button
+                    onClick={() => dispatch(clearFilters())}
+                    className="px-3 py-1.5 rounded-md text-xs text-muted hover:text-foreground transition-colors"
+                >
+                    Clear
+                </button>
+            )}
         </div>
     );
 }

@@ -13,25 +13,32 @@ export default function NotificationsPanel() {
 
     return (
         <section className="flex flex-col gap-2">
-            <h2 className="text-xs uppercase tracking-widest text-muted mb-1">Alerts</h2>
-            {items.map((n) => (
-                <div
-                    key={n.id}
-                    className={`flex items-center justify-between px-4 py-2 rounded-lg border ${
-                        n.severity === "warn"
-                            ? "bg-surface border-accent-red text-accent-red"
-                            : "bg-surface border-border"
-                    }`}
-                >
-                    <span className="text-sm">{n.message}</span>
-                    <button
-                        onClick={() => dispatch(dismissNotification(n.id))}
-                        className="text-xs text-muted hover:text-foreground ml-3"
+            <h2 className="text-[10px] uppercase tracking-[0.2em] text-muted px-1">Alerts</h2>
+            <div className="flex flex-col gap-1.5">
+                {items.map((n) => (
+                    <div
+                        key={n.id}
+                        className="group flex items-center justify-between gap-3 px-4 py-3 rounded-xl bg-surface/60 border border-border hover:border-border-strong transition-colors"
                     >
-                        ✕
-                    </button>
-                </div>
-            ))}
+                        <div className="flex items-center gap-3 min-w-0">
+                            <span
+                                className={`h-1.5 w-1.5 rounded-full shrink-0 ${
+                                    n.severity === "warn" ? "bg-accent-red" : "bg-accent-blue"
+                                }`}
+                                aria-hidden
+                            />
+                            <span className="text-sm truncate">{n.message}</span>
+                        </div>
+                        <button
+                            onClick={() => dispatch(dismissNotification(n.id))}
+                            aria-label="Dismiss"
+                            className="text-xs text-muted hover:text-foreground opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                            ✕
+                        </button>
+                    </div>
+                ))}
+            </div>
         </section>
     );
 }
