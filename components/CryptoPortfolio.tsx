@@ -18,12 +18,12 @@ const ASSET_LABEL: Record<"bitcoin" | "ethereum" | "solana", string> = {
 };
 
 export default function CryptoPortfolio() {
-    const holdings = useSelector((s: RootState) => selectHoldings(s));
-    const prices = useSelector((s: RootState) => selectPrices(s));
-    const values = useSelector((s: RootState) => selectHoldingsValue(s));
-    const total = useSelector((s: RootState) => selectPortfolioTotal(s));
-    const loading = useSelector((s: RootState) => selectPortfolioLoading(s));
-    const error = useSelector((s: RootState) => selectPortfolioError(s));
+    const holdings = useSelector((state: RootState) => selectHoldings(state));
+    const prices = useSelector((state: RootState) => selectPrices(state));
+    const values = useSelector((state: RootState) => selectHoldingsValue(state));
+    const total = useSelector((state: RootState) => selectPortfolioTotal(state));
+    const loading = useSelector((state: RootState) => selectPortfolioLoading(state));
+    const error = useSelector((state: RootState) => selectPortfolioError(state));
 
     return (
         <section className="flex flex-col gap-2">
