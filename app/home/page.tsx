@@ -12,6 +12,7 @@ import {selectUsername} from "@/features/auth/selectors/authSelectors";
 import FilterBar from "@/components/FilterBar";
 import CryptoPortfolio from "@/components/CryptoPortfolio";
 import NotificationsPanel from "@/components/NotificationsPanel";
+import CurrencyPicker from "@/components/CurrencyPicker";
 
 export default function HomePage() {
     const username = useSelector((state: RootState) => selectUsername(state));
@@ -39,6 +40,8 @@ export default function HomePage() {
                     </span>
                 </div>
             </header>
+
+            <CurrencyPicker/>
 
             <NotificationsPanel/>
 

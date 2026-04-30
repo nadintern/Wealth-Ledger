@@ -4,18 +4,32 @@ import transactionReducer from "@/features/transaction-and-filters/slices/transa
 import filterReducer from "@/features/transaction-and-filters/slices/filterSlice"
 import portfolioReducer from "@/features/portfolio/slices/portfolioSlice";
 import notificationsReducer from "@/features/notifications/slices/notificationsSlice";
+import currencyReducer from "@/features/multi-currency-converter/slices/currencySlice";
 import {loginUser} from "@/features/auth/thunks/authThunk";
 import {simulateTxnFetch} from "@/features/transaction-and-filters/thunks/transactionThunk";
 import {fetchCryptoPrices} from "@/features/portfolio/thunks/cryptoThunk";
+import {fetchRatesThunk} from "@/features/multi-currency-converter/thunks/fetchRatesThunk";
+import { persistReducer, persistStore } from "redux-persist";
+import storage from "redux-persist/lib/storage";
+import {FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE} from "redux-persist";
+
+//This configuration is what we will be using to configure how persisting logic would work for currencySlice
+const currencyPersistConfig = {
+    key: "currency", // the local storage key name (in local-storage, datas are stored as key-val pairs and this auto-gens a key called persist:currency internally)
+    storage,
+    whitelist: ["preferred"] //onlt this state field is persisted , while others aren't
+}
+
+const persistedCurrencyReducer = persistReducer(currencyPersistConfig, currencyReducer);
 
 
 const listnerMiddleware = createListenerMiddleware();
-
 listnerMiddleware.startListening({
     actionCreator: loginUser.fulfilled, // which action to watch
     effect: async (_action, listnerApi) => {
         listnerApi.dispatch(simulateTxnFetch());
         listnerApi.dispatch(fetchCryptoPrices());
+        listnerApi.dispatch(fetchRatesThunk());
     }
 });
 
@@ -30,10 +44,17 @@ export const store = configureStore({
         filter: filterReducer,
         portfolio: portfolioReducer,
         notifications: notificationsReducer,
+        currency: persistedCurrencyReducer,
     },
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().prepend(listnerMiddleware.middleware),
+        getDefaultMiddleware({
+            serializableCheck: {
+                ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+            },
+        }).prepend(listnerMiddleware.middleware),
 });
+
+export const persistor = persistStore(store);
 
 /**
  * RootState is a type that will be later used in the project .
