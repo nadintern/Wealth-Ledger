@@ -13,6 +13,7 @@ import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import {FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE} from "redux-persist";
 
+//Preffered Currency Config
 //This configuration is what we will be using to configure how persisting logic would work for currencySlice
 const currencyPersistConfig = {
     key: "currency", // the local storage key name (in local-storage, datas are stored as key-val pairs and this auto-gens a key called persist:currency internally)
@@ -22,6 +23,14 @@ const currencyPersistConfig = {
 
 const persistedCurrencyReducer = persistReducer(currencyPersistConfig, currencyReducer);
 
+//Auth status config
+const authPersistConfig = {
+    key: "auth",
+    storage,
+    whitelist: ["username", "isAuthenticated"]
+}
+
+const persistedAuthReducer = persistReducer(authPersistConfig, authReducer);
 
 const listnerMiddleware = createListenerMiddleware();
 listnerMiddleware.startListening({
@@ -39,7 +48,7 @@ listnerMiddleware.startListening({
  */
 export const store = configureStore({
     reducer: {
-        auth: authReducer,
+        auth: persistedAuthReducer,
         transactions: transactionReducer,
         filter: filterReducer,
         portfolio: portfolioReducer,

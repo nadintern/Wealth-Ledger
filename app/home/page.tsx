@@ -1,7 +1,9 @@
 "use client";
 
-import {useSelector} from "react-redux";
-import type {RootState} from "@/features";
+import {useDispatch, useSelector} from "react-redux";
+import {useRouter} from "next/navigation";
+import type {AppDispatch, RootState} from "@/features";
+import {persistor} from "@/features";
 import {
     selectTransactionsLoading,
     selectTransactionsError,
@@ -9,17 +11,27 @@ import {
 } from "@/features/transaction-and-filters/selectors/transactionSelectors";
 import {selectFilteredTransaction} from "@/features/transaction-and-filters/selectors/filterSelectors";
 import {selectUsername} from "@/features/auth/selectors/authSelectors";
+import {logout} from "@/features/auth/slices/authSlice";
 import FilterBar from "@/components/FilterBar";
 import CryptoPortfolio from "@/components/CryptoPortfolio";
 import NotificationsPanel from "@/components/NotificationsPanel";
 import CurrencyPicker from "@/components/CurrencyPicker";
 
 export default function HomePage() {
+    const dispatch = useDispatch<AppDispatch>();
+    const router = useRouter();
+
     const username = useSelector((state: RootState) => selectUsername(state));
     const transactions = useSelector((state: RootState) => selectFilteredTransaction(state));
     const loading = useSelector((state: RootState) => selectTransactionsLoading(state));
     const error = useSelector((state: RootState) => selectTransactionsError(state));
     const totalBalance = useSelector((state: RootState) => selectTotalBalance(state));
+
+    const handleLogout = async () => {
+        dispatch(logout());
+        await persistor.purge();
+        router.push("/");
+    };
 
     return (
         <main className="max-w-3xl mx-auto px-6 py-10 flex flex-col gap-8">
@@ -29,15 +41,23 @@ export default function HomePage() {
                     <p className="text-[10px] uppercase tracking-[0.2em] text-muted">Welcome back</p>
                     <h1 className="text-xl font-semibold tracking-tight">{username}</h1>
                 </div>
-                <div className="flex flex-col items-end gap-1">
-                    <p className="text-[10px] uppercase tracking-[0.2em] text-muted">Total balance</p>
-                    <span
-                        className={`text-2xl font-numeric font-medium tabular-nums ${
-                            totalBalance >= 0 ? "text-foreground" : "text-accent-red"
-                        }`}
+                <div className="flex items-center gap-4">
+                    <div className="flex flex-col items-end gap-1">
+                        <p className="text-[10px] uppercase tracking-[0.2em] text-muted">Total balance</p>
+                        <span
+                            className={`text-2xl font-numeric font-medium tabular-nums ${
+                                totalBalance >= 0 ? "text-foreground" : "text-accent-red"
+                            }`}
+                        >
+                            ₹{totalBalance.toFixed(2)}
+                        </span>
+                    </div>
+                    <button
+                        onClick={handleLogout}
+                        className="rounded-lg border border-border bg-surface-raised px-3 py-2 text-xs font-medium hover:bg-surface-hover transition-colors"
                     >
-                        ₹{totalBalance.toFixed(2)}
-                    </span>
+                        Log out
+                    </button>
                 </div>
             </header>
 
