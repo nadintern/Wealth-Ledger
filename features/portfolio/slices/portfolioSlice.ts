@@ -12,9 +12,7 @@ interface IPortfolioState {
 }
 
 /**
- * Mock holdings — hardcoded for now. A future feature could let the user edit
- * these. For Feature 03 the assignment only requires that holdings exist so
- * we can compute total value.
+ * Mock holdings (hardcoded ).
  */
 const initialState: IPortfolioState = {
     holdings: {bitcoin: 0.5, ethereum: 2, solana: 10},

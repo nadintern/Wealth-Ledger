@@ -4,12 +4,13 @@ import {useSelector} from "react-redux";
 import type {RootState} from "@/features";
 import {
     selectHoldings,
-    selectPrices,
+    selectConvertedPrices,
     selectHoldingsValue,
     selectPortfolioTotal,
     selectPortfolioLoading,
     selectPortfolioError,
 } from "@/features/portfolio/selectors/portfolioSelectors";
+import {selectPreferredCurrency} from "@/features/multi-currency-converter/selectors/currencySelectors";
 
 const ASSET_LABEL: Record<"bitcoin" | "ethereum" | "solana", { ticker: string; name: string }> = {
     bitcoin: {ticker: "BTC", name: "Bitcoin"},
@@ -19,18 +20,19 @@ const ASSET_LABEL: Record<"bitcoin" | "ethereum" | "solana", { ticker: string; n
 
 export default function CryptoPortfolio() {
     const holdings = useSelector((state: RootState) => selectHoldings(state));
-    const prices = useSelector((state: RootState) => selectPrices(state));
+    const prices = useSelector((state: RootState) => selectConvertedPrices(state));
     const values = useSelector((state: RootState) => selectHoldingsValue(state));
     const total = useSelector((state: RootState) => selectPortfolioTotal(state));
     const loading = useSelector((state: RootState) => selectPortfolioLoading(state));
     const error = useSelector((state: RootState) => selectPortfolioError(state));
+    const preferred = useSelector((state: RootState) => selectPreferredCurrency(state));
 
     return (
         <section className="rounded-2xl border border-border bg-surface/60 backdrop-blur-sm overflow-hidden">
             <div className="px-6 py-4 border-b border-border flex items-center justify-between">
                 <h2 className="text-[10px] uppercase tracking-[0.2em] text-muted">Crypto Portfolio</h2>
                 <span className="text-sm font-numeric font-medium tabular-nums">
-                    ${total.toFixed(2)}
+                    {preferred} {total.toFixed(2)}
                 </span>
             </div>
 
@@ -55,12 +57,12 @@ export default function CryptoPortfolio() {
                                 <div className="flex flex-col">
                                     <span className="text-sm font-medium">{ASSET_LABEL[asset].name}</span>
                                     <span className="text-xs text-muted font-numeric tabular-nums">
-                                        {holdings[asset]} {ASSET_LABEL[asset].ticker} · ${prices[asset].toFixed(2)}
+                                        {holdings[asset]} {ASSET_LABEL[asset].ticker} · {preferred} {prices[asset].toFixed(2)}
                                     </span>
                                 </div>
                             </div>
                             <span className="font-numeric text-sm font-medium tabular-nums">
-                                ${values[asset].toFixed(2)}
+                                {preferred} {values[asset].toFixed(2)}
                             </span>
                         </div>
                     ))}
