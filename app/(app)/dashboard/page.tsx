@@ -6,16 +6,22 @@ import {selectUsername} from "@/features/auth/selectors/authSelectors";
 import {selectTotalBalance} from "@/features/transaction-and-filters/selectors/transactionSelectors";
 import {selectPortfolioTotal} from "@/features/portfolio/selectors/portfolioSelectors";
 import {selectPreferredCurrency} from "@/features/multi-currency-converter/selectors/currencySelectors";
+import {
+    selectNetWorth,
+    selectAssetAllocation,
+    type AllocationSlice,
+} from "@/features/dashboard/selectors/dashboardSelectors";
 import PageHeader from "@/components/PageHeader";
 import NotificationsPanel from "@/components/NotificationsPanel";
+import AllocationDonut from "@/components/AllocationDonut";
 
 export default function DashboardPage() {
     const username = useSelector((s: RootState) => selectUsername(s));
+    const netWorth = useSelector((s: RootState) => selectNetWorth(s));
     const totalBalance = useSelector((s: RootState) => selectTotalBalance(s));
     const portfolioTotal = useSelector((s: RootState) => selectPortfolioTotal(s));
+    const allocation = useSelector((s: RootState) => selectAssetAllocation(s));
     const preferred = useSelector((s: RootState) => selectPreferredCurrency(s));
-
-    const netWorth = totalBalance + portfolioTotal;
 
     return (
         <>
@@ -26,37 +32,38 @@ export default function DashboardPage() {
             />
 
             <section className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <StatCard
-                    label="Net worth"
-                    amount={netWorth}
-                    currency={preferred}
-                    accent
-                />
-                <StatCard
-                    label="Cash balance"
-                    amount={totalBalance}
-                    currency={preferred}
-                />
-                <StatCard
-                    label="Crypto holdings"
-                    amount={portfolioTotal}
-                    currency={preferred}
-                />
+                <StatCard label="Net worth" amount={netWorth} currency={preferred} accent/>
+                <StatCard label="Cash balance" amount={totalBalance} currency={preferred}/>
+                <StatCard label="Crypto holdings" amount={portfolioTotal} currency={preferred}/>
+            </section>
+
+            <section className="rounded-2xl border border-border bg-surface/60 backdrop-blur-sm overflow-hidden">
+                <div className="px-6 py-4 border-b border-border">
+                    <h2 className="text-[10px] uppercase tracking-[0.2em] text-muted">
+                        Asset allocation
+                    </h2>
+                </div>
+                <div className="px-6 py-6 flex flex-col md:flex-row items-center md:items-start gap-8">
+                    <AllocationDonut slices={allocation}>
+                        <div className="flex flex-col items-center gap-0.5">
+                            <span className="text-[10px] uppercase tracking-[0.2em] text-muted">
+                                Net worth
+                            </span>
+                            <span className="font-display text-lg font-semibold tabular-nums">
+                                {preferred} {netWorth.toFixed(0)}
+                            </span>
+                        </div>
+                    </AllocationDonut>
+
+                    <ul className="flex-1 w-full flex flex-col gap-3">
+                        {allocation.map((s) => (
+                            <AllocationLegendRow key={s.key} slice={s} currency={preferred}/>
+                        ))}
+                    </ul>
+                </div>
             </section>
 
             <NotificationsPanel/>
-
-            <section className="rounded-2xl border border-border bg-surface/40 px-6 py-10 flex flex-col items-center gap-3 text-center">
-                <p className="text-[10px] uppercase tracking-[0.2em] text-muted">
-                    Coming next
-                </p>
-                <h2 className="font-display text-xl font-semibold">
-                    Net-worth dashboard with live polling
-                </h2>
-                <p className="text-sm text-muted max-w-md">
-                    Feature 5 will render historical net-worth here, sparkline included.
-                </p>
-            </section>
         </>
     );
 }
@@ -88,5 +95,33 @@ function StatCard({label, amount, currency, accent}: StatCardProps) {
                 </span>
             </div>
         </div>
+    );
+}
+
+interface AllocationLegendRowProps {
+    slice: AllocationSlice;
+    currency: string;
+}
+
+function AllocationLegendRow({slice, currency}: AllocationLegendRowProps) {
+    return (
+        <li className="flex items-center justify-between gap-4 px-3 py-2.5 rounded-lg hover:bg-surface-hover transition-colors">
+            <div className="flex items-center gap-3 min-w-0">
+                <span
+                    className="h-2.5 w-2.5 rounded-sm shrink-0"
+                    style={{backgroundColor: slice.color}}
+                    aria-hidden
+                />
+                <span className="text-sm font-medium">{slice.label}</span>
+            </div>
+            <div className="flex items-center gap-4 shrink-0">
+                <span className="font-numeric text-xs text-muted tabular-nums">
+                    {(slice.pct * 100).toFixed(1)}%
+                </span>
+                <span className="font-numeric text-sm tabular-nums">
+                    {currency} {slice.value.toFixed(2)}
+                </span>
+            </div>
+        </li>
     );
 }

@@ -4,11 +4,13 @@ import {useSelector} from "react-redux";
 import {redirect} from "next/navigation";
 import type {RootState} from "@/features";
 import {selectIsAuthenticated} from "@/features/auth/selectors/authSelectors";
+import {usePricePolling} from "@/hooks/usePricePolling";
 import Sidebar from "@/components/Sidebar";
 import TopBar from "@/components/TopBar";
 import MobileNav from "@/components/MobileNav";
 
 export default function AppLayout({children}: {children: React.ReactNode}) {
+    usePricePolling();
     const isAuthenticated = useSelector((s: RootState) => selectIsAuthenticated(s));
     if (!isAuthenticated) redirect("/");
 
