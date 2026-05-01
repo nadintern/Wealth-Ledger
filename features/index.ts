@@ -42,6 +42,15 @@ listnerMiddleware.startListening({
     }
 });
 
+listnerMiddleware.startListening({
+    type: REHYDRATE,
+    effect : async (_action, listnerApi) => {
+        listnerApi.dispatch(simulateTxnFetch());
+        listnerApi.dispatch(fetchCryptoPrices());
+        listnerApi.dispatch(fetchRatesThunk());
+    }
+})
+
 /**
  * The purpose of configureStore is to create a features from which we can fetch the state from
  *
