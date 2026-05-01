@@ -9,8 +9,9 @@ import {
     selectTransactionsError,
     selectTotalBalance,
 } from "@/features/transaction-and-filters/selectors/transactionSelectors";
-import {selectFilteredTransaction} from "@/features/transaction-and-filters/selectors/filterSelectors";
+import {selectConvertedFilteredTransaction} from "@/features/transaction-and-filters/selectors/filterSelectors";
 import {selectUsername} from "@/features/auth/selectors/authSelectors";
+import {selectPreferredCurrency} from "@/features/multi-currency-converter/selectors/currencySelectors";
 import {logout} from "@/features/auth/slices/authSlice";
 import FilterBar from "@/components/FilterBar";
 import CryptoPortfolio from "@/components/CryptoPortfolio";
@@ -22,10 +23,11 @@ export default function HomePage() {
     const router = useRouter();
 
     const username = useSelector((state: RootState) => selectUsername(state));
-    const transactions = useSelector((state: RootState) => selectFilteredTransaction(state));
+    const transactions = useSelector((state: RootState) => selectConvertedFilteredTransaction(state));
     const loading = useSelector((state: RootState) => selectTransactionsLoading(state));
     const error = useSelector((state: RootState) => selectTransactionsError(state));
     const totalBalance = useSelector((state: RootState) => selectTotalBalance(state));
+    const preferred = useSelector((state: RootState) => selectPreferredCurrency(state));
 
     const handleLogout = async () => {
         dispatch(logout());
@@ -49,7 +51,7 @@ export default function HomePage() {
                                 totalBalance >= 0 ? "text-foreground" : "text-accent-red"
                             }`}
                         >
-                            ₹{totalBalance.toFixed(2)}
+                            {preferred} {totalBalance.toFixed(2)}
                         </span>
                     </div>
                     <button
@@ -93,14 +95,21 @@ export default function HomePage() {
                                         {txn.category} · {txn.date}
                                     </span>
                                 </div>
-                                <span
-                                    className={`font-numeric text-sm font-medium tabular-nums ${
-                                        txn.type === "credit" ? "text-accent-green" : "text-accent-red"
-                                    }`}
-                                >
-                                    {txn.type === "credit" ? "+" : "−"}
-                                    {txn.currency} {txn.amount.toFixed(2)}
-                                </span>
+                                <div className="flex flex-col items-end gap-0.5">
+                                    <span
+                                        className={`font-numeric text-sm font-medium tabular-nums ${
+                                            txn.type === "credit" ? "text-accent-green" : "text-accent-red"
+                                        }`}
+                                    >
+                                        {txn.type === "credit" ? "+" : "−"}
+                                        {txn.currency} {txn.amount.toFixed(2)}
+                                    </span>
+                                    {txn.currency !== preferred && (
+                                        <span className="text-xs text-muted font-numeric tabular-nums">
+                                            ≈ {preferred} {txn.convertedAmount.toFixed(2)}
+                                        </span>
+                                    )}
+                                </div>
                             </div>
                         ))
                     )}

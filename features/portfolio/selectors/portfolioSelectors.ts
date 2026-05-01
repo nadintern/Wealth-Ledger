@@ -11,11 +11,7 @@ export const selectPrices = (state: RootState) => state.portfolio.prices;
 export const selectPortfolioLoading = (state: RootState) => state.portfolio.loading;
 export const selectPortfolioError = (state: RootState) => state.portfolio.error;
 
-/**
- * Per-asset price expressed in the user's preferred currency.
- * Falls back to raw USD pricing while rates are still loading
- * (so the UI never has to render `null` just because rates are in flight).
- */
+
 export const selectConvertedPrices = createSelector(
     [selectPrices, selectRates, selectPreferredCurrency],
     (prices, rates, preferred) => {
@@ -29,10 +25,7 @@ export const selectConvertedPrices = createSelector(
     }
 );
 
-/**
- * Per-asset value (units × price) — in the preferred currency.
- * Memoized; recomputes only when holdings, prices, rates, or preferred change.
- */
+
 export const selectHoldingsValue = createSelector(
     [selectHoldings, selectPrices, selectRates, selectPreferredCurrency],
     (holdings, prices, rates, preferred) => {
