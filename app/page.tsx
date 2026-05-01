@@ -13,5 +13,5 @@ export default function Home() {
      */
     const isAuthenticated = useSelector((state: RootState) => selectIsAuthenticated(state));
     console.log(isAuthenticated);
-    return isAuthenticated ? (redirect("/home")) : <LoginForm/>;
+    return isAuthenticated ? (redirect("/dashboard")) : <LoginForm/>;
 }

@@ -1,5 +1,5 @@
 import type {Metadata} from "next";
-import {Inter, Geist_Mono} from "next/font/google";
+import {Inter, Inter_Tight, JetBrains_Mono} from "next/font/google";
 import "./globals.css";
 import {Providers} from "@/app/providers";
 
@@ -8,8 +8,13 @@ const inter = Inter({
     subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-    variable: "--font-geist-mono",
+const interTight = Inter_Tight({
+    variable: "--font-inter-tight",
+    subsets: ["latin"],
+});
+
+const jetbrainsMono = JetBrains_Mono({
+    variable: "--font-jetbrains-mono",
     subsets: ["latin"],
 });
 
@@ -26,7 +31,7 @@ export default function RootLayout({
     return (
         <html
             lang="en"
-            className={`${inter.variable} ${geistMono.variable} h-full antialiased`}
+            className={`${inter.variable} ${interTight.variable} ${jetbrainsMono.variable} h-full antialiased`}
         >
         <body className="min-h-full flex flex-col bg-background text-foreground">
         <Providers>
