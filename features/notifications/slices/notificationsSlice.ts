@@ -36,6 +36,19 @@ const notificationsSlice = createSlice({
         clearAll(state) {
             state.items = [];
         },
+        addNotification(
+            state,
+            action: PayloadAction<{id: string; message: string; severity: Severity}>
+        ) {
+            // De-dupe by id — listenerMiddleware can fire multiple times.
+            if (state.items.some((n) => n.id === action.payload.id)) return;
+            state.items.push({
+                id: action.payload.id,
+                message: action.payload.message,
+                severity: action.payload.severity,
+                createdAt: Date.now(),
+            });
+        },
     },
     extraReducers: (builder) => {
         // Cross-slice listener: same action that portfolioSlice listens to.
@@ -66,5 +79,5 @@ const notificationsSlice = createSlice({
     },
 });
 
-export const {dismissNotification, clearAll} = notificationsSlice.actions;
+export const {dismissNotification, clearAll, addNotification} = notificationsSlice.actions;
 export default notificationsSlice.reducer;

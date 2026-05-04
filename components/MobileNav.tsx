@@ -7,6 +7,7 @@ const NAV = [
     {href: "/dashboard", label: "Overview"},
     {href: "/transactions", label: "Txns"},
     {href: "/portfolio", label: "Crypto"},
+    {href: "/insights", label: "Insights"},
     {href: "/settings", label: "Settings"},
 ];
 

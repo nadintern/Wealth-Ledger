@@ -55,18 +55,18 @@ export default function TransactionsPage() {
                                         {txn.description}
                                     </span>
                                     <span className="text-xs text-muted capitalize">
-                                        {txn.category} · {txn.date}
+                                        {txn.category} · {new Date(txn.date).toLocaleDateString()}
                                     </span>
                                 </div>
                                 <div className="flex flex-col items-end gap-0.5 shrink-0">
                                     <span
                                         className={`font-numeric text-sm font-medium tabular-nums ${
-                                            txn.type === "credit"
+                                            txn.type === "income"
                                                 ? "text-accent-green"
                                                 : "text-accent-red"
                                         }`}
                                     >
-                                        {txn.type === "credit" ? "+" : "−"}
+                                        {txn.type === "income" ? "+" : "−"}
                                         {txn.currency} {txn.amount.toFixed(2)}
                                     </span>
                                     {txn.currency !== preferred && (

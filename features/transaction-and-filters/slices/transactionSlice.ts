@@ -1,20 +1,49 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {simulateTxnFetch} from "@/features/transaction-and-filters/thunks/transactionThunk";
 
+export type TransactionType = "income" | "expense";
+
+// Expense categories (debited from balance) + income sources (credited).
+// Mirrors the faker generator's two source lists.
+export type ExpenseCategory =
+    | "food"
+    | "transport"
+    | "entertainment"
+    | "utilities"
+    | "shopping"
+    | "health"
+    | "education"
+    | "rent";
+
+export type IncomeCategory = "salary" | "freelance" | "investment";
+
+export type TransactionCategory = ExpenseCategory | IncomeCategory;
+
+export const EXPENSE_CATEGORIES: readonly ExpenseCategory[] = [
+    "food",
+    "transport",
+    "entertainment",
+    "utilities",
+    "shopping",
+    "health",
+    "education",
+    "rent",
+] as const;
+
+export const INCOME_CATEGORIES: readonly IncomeCategory[] = [
+    "salary",
+    "freelance",
+    "investment",
+] as const;
+
 export type Transaction = {
-    id: number;
-    date: string;
+    id: string;            // UUID from faker
+    date: string;          // ISO 8601, e.g. "2026-04-21T15:30:00.000Z"
     amount: number;
-    type: "credit" | "debit";
-    category:
-        | "food"
-        | "transport"
-        | "shopping"
-        | "bills"
-        | "salary"
-        | "entertainment";
+    type: TransactionType;
+    category: TransactionCategory;
     description: string;
-    currency: "INR" | "USD" | "EUR";
+    currency: "USD";       // Generator emits USD only; FX still applies via rates
 };
 
 interface ITransactionState {

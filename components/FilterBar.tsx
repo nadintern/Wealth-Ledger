@@ -5,15 +5,17 @@ import {AppDispatch, RootState} from "@/features";
 import {
     setTypeFilter,
     setCategory,
-    setCurrency,
     clearFilters,
 } from "@/features/transaction-and-filters/slices/filterSlice";
 import {
     selectTypeFilter,
     selectCategoryFilter,
-    selectCurrencyFilter,
 } from "@/features/transaction-and-filters/selectors/filterSelectors";
-import {Transaction} from "@/features/transaction-and-filters/slices/transactionSlice";
+import {
+    Transaction,
+    EXPENSE_CATEGORIES,
+    INCOME_CATEGORIES,
+} from "@/features/transaction-and-filters/slices/transactionSlice";
 
 const SELECT_CLASS =
     "px-3 py-1.5 rounded-md bg-surface-raised border border-border text-xs text-foreground hover:border-border-strong focus:border-border-strong transition-colors cursor-pointer";
@@ -23,9 +25,8 @@ export default function FilterBar() {
 
     const type = useSelector((state: RootState) => selectTypeFilter(state));
     const category = useSelector((state: RootState) => selectCategoryFilter(state));
-    const currency = useSelector((state: RootState) => selectCurrencyFilter(state));
 
-    const hasFilter = type !== null || category !== null || currency !== null;
+    const hasFilter = type !== null || category !== null;
 
     return (
         <div className="flex gap-2 flex-wrap items-center">
@@ -38,8 +39,8 @@ export default function FilterBar() {
                 className={SELECT_CLASS}
             >
                 <option value="">All types</option>
-                <option value="credit">Credit</option>
-                <option value="debit">Debit</option>
+                <option value="income">Income</option>
+                <option value="expense">Expense</option>
             </select>
 
             <select
@@ -51,26 +52,20 @@ export default function FilterBar() {
                 className={SELECT_CLASS}
             >
                 <option value="">All categories</option>
-                <option value="food">Food</option>
-                <option value="transport">Transport</option>
-                <option value="shopping">Shopping</option>
-                <option value="bills">Bills</option>
-                <option value="salary">Salary</option>
-                <option value="entertainment">Entertainment</option>
-            </select>
-
-            <select
-                value={currency ?? ""}
-                onChange={(e) => {
-                    const v = e.target.value;
-                    dispatch(setCurrency(v === "" ? null : (v as Transaction["currency"])));
-                }}
-                className={SELECT_CLASS}
-            >
-                <option value="">All currencies</option>
-                <option value="INR">INR</option>
-                <option value="USD">USD</option>
-                <option value="EUR">EUR</option>
+                <optgroup label="Expense">
+                    {EXPENSE_CATEGORIES.map((c) => (
+                        <option key={c} value={c}>
+                            {c[0].toUpperCase() + c.slice(1)}
+                        </option>
+                    ))}
+                </optgroup>
+                <optgroup label="Income">
+                    {INCOME_CATEGORIES.map((c) => (
+                        <option key={c} value={c}>
+                            {c[0].toUpperCase() + c.slice(1)}
+                        </option>
+                    ))}
+                </optgroup>
             </select>
 
             {hasFilter && (
