@@ -7,11 +7,17 @@ import {
     selectCurrentMonthCategorySpend,
     selectMonthlyTotalSpend,
     selectBudgetUtilization,
+    selectMonthlyIncomeVsExpense,
+    selectCurrentMonthSummary,
+    selectTopExpensesThisMonth,
 } from "@/features/transaction-and-filters/selectors/insightsSelectors";
 import PageHeader from "@/components/PageHeader";
 import SpendByCategoryChart from "@/components/SpendByCategoryChart";
 import MonthlySpendChart from "@/components/MonthlySpendChart";
 import BudgetUtilizationChart from "@/components/BudgetUtilizationChart";
+import IncomeVsExpenseChart from "@/components/IncomeVsExpenseChart";
+import MonthSummaryStats from "@/components/MonthSummaryStats";
+import TopExpensesList from "@/components/TopExpensesList";
 import NotificationsPanel from "@/components/NotificationsPanel";
 
 export default function InsightsPage() {
@@ -19,6 +25,9 @@ export default function InsightsPage() {
     const categorySpend = useSelector((s: RootState) => selectCurrentMonthCategorySpend(s));
     const monthlyTotals = useSelector((s: RootState) => selectMonthlyTotalSpend(s));
     const utilization = useSelector((s: RootState) => selectBudgetUtilization(s));
+    const incomeVsExpense = useSelector((s: RootState) => selectMonthlyIncomeVsExpense(s));
+    const summary = useSelector((s: RootState) => selectCurrentMonthSummary(s));
+    const topExpenses = useSelector((s: RootState) => selectTopExpensesThisMonth(s));
 
     return (
         <>
@@ -28,12 +37,24 @@ export default function InsightsPage() {
                 description="Where your money goes — by category, by month, and against your budgets."
             />
 
+            <section>
+                <Card title="This month at a glance">
+                    <MonthSummaryStats summary={summary} currency={preferred}/>
+                </Card>
+            </section>
+
             <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <Card title="This month by category">
                     <SpendByCategoryChart slices={categorySpend} currency={preferred}/>
                 </Card>
-                <Card title="Last 6 months">
+                <Card title="Income vs expense (last 6 months)">
+                    <IncomeVsExpenseChart months={incomeVsExpense} currency={preferred}/>
+                </Card>
+                <Card title="Last 6 months — total spend">
                     <MonthlySpendChart months={monthlyTotals} currency={preferred}/>
+                </Card>
+                <Card title="Top 5 expenses this month">
+                    <TopExpensesList items={topExpenses} currency={preferred}/>
                 </Card>
             </section>
 

@@ -10,6 +10,7 @@ import {selectConvertedFilteredTransaction} from "@/features/transaction-and-fil
 import {selectPreferredCurrency} from "@/features/multi-currency-converter/selectors/currencySelectors";
 import PageHeader from "@/components/PageHeader";
 import FilterBar from "@/components/FilterBar";
+import AddTransactionForm from "@/components/AddTransactionForm";
 
 export default function TransactionsPage() {
     const transactions = useSelector((s: RootState) => selectConvertedFilteredTransaction(s));
@@ -30,7 +31,10 @@ export default function TransactionsPage() {
                     <h2 className="text-[10px] uppercase tracking-[0.2em] text-muted">
                         Ledger
                     </h2>
-                    <FilterBar/>
+                    <div className="flex items-center gap-3 flex-wrap">
+                        <FilterBar/>
+                        <AddTransactionForm/>
+                    </div>
                 </div>
 
                 <div className="divide-y divide-border">

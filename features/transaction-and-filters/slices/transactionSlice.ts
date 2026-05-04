@@ -1,4 +1,4 @@
-import {createSlice} from "@reduxjs/toolkit";
+import {createSlice, PayloadAction, nanoid} from "@reduxjs/toolkit";
 import {simulateTxnFetch} from "@/features/transaction-and-filters/thunks/transactionThunk";
 
 export type TransactionType = "income" | "expense";
@@ -58,10 +58,29 @@ const initialState: ITransactionState = {
     error: null,
 };
 
+// Payload accepted by the addTransaction reducer. id + currency are
+// filled in by the reducer itself so the caller (form) stays small.
+export type NewTransactionInput = Omit<Transaction, "id" | "currency">;
+
 export const transactionSlice = createSlice({
     name: "transactions",
     initialState,
-    reducers: {},
+    reducers: {
+        addTransaction: (
+            state,
+            action: PayloadAction<NewTransactionInput>
+        ) => {
+            const txn: Transaction = {
+                ...action.payload,
+                id: nanoid(),
+                currency: "USD",
+            };
+            // Prepend so newest entries surface first in the ledger view.
+            state.transactions = state.transactions
+                ? [txn, ...state.transactions]
+                : [txn];
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(simulateTxnFetch.pending, (state) => {
@@ -80,5 +99,7 @@ export const transactionSlice = createSlice({
     },
 });
 
+
+export const {addTransaction} = transactionSlice.actions;
 
 export default transactionSlice.reducer;
