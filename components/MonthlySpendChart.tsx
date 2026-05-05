@@ -24,7 +24,7 @@ export default function MonthlySpendChart({months, currency}: Props) {
             {
                 label: "Total spend",
                 data: months.map((m) => m.total),
-                backgroundColor: "#60a5fa",
+                backgroundColor: "#ffffff",
                 borderRadius: 6,
                 barThickness: 28,
             },

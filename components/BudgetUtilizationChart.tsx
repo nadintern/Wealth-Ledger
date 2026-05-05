@@ -49,7 +49,9 @@ export default function BudgetUtilizationChart({items, currency}: Props) {
                                 className="absolute inset-y-0 left-0 rounded-full"
                                 style={{
                                     width: `${filled}%`,
-                                    backgroundColor: over ? "var(--accent-red)" : item.color,
+                                    // White by default; over-budget keeps red so
+                                    // the warning state remains visually distinct.
+                                    backgroundColor: over ? "var(--accent-red)" : "#ffffff",
                                 }}
                             />
                             {overflow > 0 && (

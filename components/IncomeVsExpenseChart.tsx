@@ -24,14 +24,16 @@ export default function IncomeVsExpenseChart({months, currency}: Props) {
             {
                 label: "Income",
                 data: months.map((m) => m.income),
-                backgroundColor: "#34d399",
+                backgroundColor: "#ffffff",
                 borderRadius: 6,
                 barThickness: 18,
             },
             {
                 label: "Expense",
                 data: months.map((m) => m.expense),
-                backgroundColor: "#f87171",
+                // Same hue, lower alpha so the two bars stay distinguishable
+                // without introducing a non-white accent color.
+                backgroundColor: "rgba(255, 255, 255, 0.35)",
                 borderRadius: 6,
                 barThickness: 18,
             },
