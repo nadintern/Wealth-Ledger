@@ -1,20 +1,49 @@
-import {createSlice} from "@reduxjs/toolkit";
+import {createSlice, PayloadAction, nanoid} from "@reduxjs/toolkit";
 import {simulateTxnFetch} from "@/features/transaction-and-filters/thunks/transactionThunk";
 
+export type TransactionType = "income" | "expense";
+
+// Expense categories (debited from balance) + income sources (credited).
+// Mirrors the faker generator's two source lists.
+export type ExpenseCategory =
+    | "food"
+    | "transport"
+    | "entertainment"
+    | "utilities"
+    | "shopping"
+    | "health"
+    | "education"
+    | "rent";
+
+export type IncomeCategory = "salary" | "freelance" | "investment";
+
+export type TransactionCategory = ExpenseCategory | IncomeCategory;
+
+export const EXPENSE_CATEGORIES: readonly ExpenseCategory[] = [
+    "food",
+    "transport",
+    "entertainment",
+    "utilities",
+    "shopping",
+    "health",
+    "education",
+    "rent",
+] as const;
+
+export const INCOME_CATEGORIES: readonly IncomeCategory[] = [
+    "salary",
+    "freelance",
+    "investment",
+] as const;
+
 export type Transaction = {
-    id: number;
-    date: string;
+    id: string;            // UUID from faker
+    date: string;          // ISO 8601, e.g. "2026-04-21T15:30:00.000Z"
     amount: number;
-    type: "credit" | "debit";
-    category:
-        | "food"
-        | "transport"
-        | "shopping"
-        | "bills"
-        | "salary"
-        | "entertainment";
+    type: TransactionType;
+    category: TransactionCategory;
     description: string;
-    currency: "INR" | "USD" | "EUR";
+    currency: "USD";       // Generator emits USD only; FX still applies via rates
 };
 
 interface ITransactionState {
@@ -29,10 +58,29 @@ const initialState: ITransactionState = {
     error: null,
 };
 
+// Payload accepted by the addTransaction reducer. id + currency are
+// filled in by the reducer itself so the caller (form) stays small.
+export type NewTransactionInput = Omit<Transaction, "id" | "currency">;
+
 export const transactionSlice = createSlice({
     name: "transactions",
     initialState,
-    reducers: {},
+    reducers: {
+        addTransaction: (
+            state,
+            action: PayloadAction<NewTransactionInput>
+        ) => {
+            const txn: Transaction = {
+                ...action.payload,
+                id: nanoid(),
+                currency: "USD",
+            };
+            // Prepend so newest entries surface first in the ledger view.
+            state.transactions = state.transactions
+                ? [txn, ...state.transactions]
+                : [txn];
+        },
+    },
     extraReducers: (builder) => {
         builder
             .addCase(simulateTxnFetch.pending, (state) => {
@@ -51,5 +99,7 @@ export const transactionSlice = createSlice({
     },
 });
 
+
+export const {addTransaction} = transactionSlice.actions;
 
 export default transactionSlice.reducer;

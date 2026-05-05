@@ -1,4 +1,4 @@
-import {RootState} from "@/features";
+import type {RootState} from "@/features";
 import {Transaction} from "@/features/transaction-and-filters/slices/transactionSlice";
 import {createSelector} from "@reduxjs/toolkit";
 import {
@@ -18,7 +18,7 @@ export const selectTotalBalance = createSelector(
         return transactions.reduce((acc, txn) => {
             const fx = rates ? rates[preferred] / rates[txn.currency] : 1;
             const converted = txn.amount * fx;
-            return txn.type === "credit" ? acc + converted : acc - converted;
+            return txn.type === "income" ? acc + converted : acc - converted;
         }, 0);
     }
 );
