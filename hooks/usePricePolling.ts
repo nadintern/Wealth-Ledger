@@ -10,6 +10,9 @@ export function usePricePolling(intervalMs: number = 60_000) {
     const dispatch = useDispatch<AppDispatch>();
 
     useEffect(() => {
+        //fetching once on loading
+        dispatch(fetchCryptoPrices());
+        dispatch(fetchRatesThunk());
         const id = setInterval(() => {
             dispatch(fetchCryptoPrices());
             dispatch(fetchRatesThunk());
